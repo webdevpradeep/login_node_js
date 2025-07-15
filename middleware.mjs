@@ -23,7 +23,7 @@ const authMiddleware = (req, res, next) => {
 
   // validate token
   try {
-    jwt.verify(token, 'kuguogyfyfvhgyvhuofkygvkiulju');
+    jwt.verify(token, process.env.TOKEN_SECRET);
   } catch (e) {
     res.statusCode = 400;
     return res.json({ error: e.message });
