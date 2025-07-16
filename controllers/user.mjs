@@ -1,7 +1,8 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import jwt from 'jsonwebtoken';
 import prisma from '../db.mjs';
-import bcrypt from 'bcrypt';
+// import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import * as z from 'zod';
 
 // input model for user registration
