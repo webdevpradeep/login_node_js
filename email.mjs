@@ -1,12 +1,13 @@
 import nodemailer from 'nodemailer';
 
 // Looking to send emails in production? Check out our Email API/SMTP product!
+// Looking to send emails in production? Check out our Email API/SMTP product!
 var transport = nodemailer.createTransport({
   host: 'sandbox.smtp.mailtrap.io',
   port: 2525,
   auth: {
-    user: '5f1d9a0a20dc05',
-    pass: '9ae638291f44b5',
+    user: '782f1d4b9c38ff',
+    pass: '3cacd5b7ee2573',
   },
 });
 
