@@ -5,6 +5,7 @@ import bcrypt from 'bcrypt';
 import * as z from 'zod';
 import { sendEmail } from '../email.mjs';
 import Randomstring from 'randomstring';
+import dayjs from 'dayjs';
 
 // input model for user registration
 const UserModel = z.object({
@@ -115,4 +116,47 @@ const forgotPasswordController = async (req, res, next) => {
   res.json({ message: 'email sent check your email' });
 };
 
-export { registerController, loginController, forgotPasswordController };
+const resetPasswordController = async (req, res, next) => {
+  const users = await prisma.user.findMany({
+    where: {
+      resetToken: req.params.token,
+    },
+  });
+
+  if (!users.length) {
+    res.statusCode = 404;
+    return res.json({ message: 'invalid reset link' });
+  }
+
+  const user = users[0];
+
+  const subTime = dayjs().subtract(
+    process.env.RESET_LINK_EXPIRY_TIME_IN_MINUTES,
+    'minute'
+  );
+  if (dayjs(subTime).isAfter(dayjs(user.resetTokenExpiry))) {
+    res.statusCode = 400;
+    return res.json({
+      message: 'link is expired!!! try forgot password again',
+    });
+  }
+
+  const hasedPassword = await bcrypt.hash(req.body.password, 10);
+  await prisma.user.update({
+    where: {
+      id: user.id,
+    },
+    data: {
+      resetToken: null,
+      password: hasedPassword,
+    },
+  });
+  res.json({ message: 'password reset successful' });
+};
+
+export {
+  registerController,
+  loginController,
+  forgotPasswordController,
+  resetPasswordController,
+};
