@@ -4,6 +4,7 @@ import {
   registerController,
   loginController,
   forgotPasswordController,
+  resetPasswordController,
 } from './controllers/user.mjs';
 import { prizeController } from './controllers/prize.mjs';
 import { globalMiddleware, authMiddleware } from './middleware.mjs';
@@ -18,6 +19,7 @@ server.use(globalMiddleware);
 server.post('/register', registerController);
 server.post('/login', loginController);
 server.post('/forgot_password', forgotPasswordController);
+server.patch('/reset_password/:token', resetPasswordController);
 server.get('/prize', authMiddleware, prizeController);
 
 // Catch-all route
