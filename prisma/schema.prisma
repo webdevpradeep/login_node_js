@@ -14,7 +14,7 @@ model User {
   name             String
   password         String
   attendances      Attendance[]
-  resetToken       String?  @defualt('')
+  resetToken       String?  
   resetTokenExpiry DateTime     @default(now())
 }
 
