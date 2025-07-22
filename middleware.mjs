@@ -28,7 +28,25 @@ const authMiddleware = (req, res, next) => {
     res.statusCode = 400;
     return res.json({ error: e.message });
   }
+
+  req.user = jwt.decode(token);
+
   next();
 };
 
-export { globalMiddleware, authMiddleware };
+const permissionMiddleware = (...roles) => {
+  return async (req, res, next) => {
+    if (!req.user || !req.user.role) {
+      res.statusCode = 500;
+      return res.json({ message: 'authentication not added correctly' });
+    }
+    const role = roles.filter((e) => e === req.user.role);
+    if (role.length == 0) {
+      res.statusCode = 401;
+      return res.json({ message: 'you are not authorized!!!' });
+    }
+    next();
+  };
+};
+
+export { globalMiddleware, authMiddleware, permissionMiddleware };
